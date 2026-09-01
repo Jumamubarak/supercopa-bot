@@ -32,6 +32,13 @@ def _get_float(name: str, default: float) -> float:
     return float(raw)
 
 
+def _get_str(name: str, default: str) -> str:
+    raw = os.getenv(name)
+    if raw is None or raw.strip() == "":
+        return default
+    return raw.strip()
+
+
 def _require(name: str) -> str:
     value = os.getenv(name, "").strip()
     if not value:
@@ -75,7 +82,7 @@ def load_settings() -> Settings:
         telegram_webhook_secret=_require("TELEGRAM_WEBHOOK_SECRET"),
         supabase_url=_require("SUPABASE_URL").rstrip("/"),
         supabase_service_key=_require("SUPABASE_SERVICE_KEY"),
-        target_url=os.getenv("TARGET_URL", "https://tickets.rfef.es/").strip(),
+        target_url=_get_str("TARGET_URL", "https://tickets.rfef.es/"),
         request_timeout_seconds=_get_int("REQUEST_TIMEOUT_SECONDS", 20),
         max_retries=_get_int("MAX_RETRIES", 3),
         open_alert_burst_count=_get_int("OPEN_ALERT_BURST_COUNT", 10),
