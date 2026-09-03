@@ -108,3 +108,37 @@ class Database:
             timeout=10,
         )
         resp.raise_for_status()
+
+    # --- Yeezy product state ----------------------------------------------
+
+    def get_known_yeezy_product_ids(self) -> set[str]:
+        resp = requests.get(
+            f"{self._base}/yeezy_products",
+            headers=self._headers,
+            params={"select": "product_id"},
+            timeout=10,
+        )
+        resp.raise_for_status()
+        return {str(row["product_id"]) for row in resp.json()}
+
+    def save_yeezy_products(self, products: list[dict]) -> None:
+        """Upsert products (id, title, price, url, image_url) into state."""
+        if not products:
+            return
+        resp = requests.post(
+            f"{self._base}/yeezy_products",
+            headers={**self._headers, "Prefer": "resolution=merge-duplicates,return=minimal"},
+            params={"on_conflict": "product_id"},
+            json=[
+                {
+                    "product_id": str(p["id"]),
+                    "title": p.get("title", ""),
+                    "price": p.get("price"),
+                    "url": p.get("url", ""),
+                    "image_url": p.get("image_url"),
+                }
+                for p in products
+            ],
+            timeout=15,
+        )
+        resp.raise_for_status()

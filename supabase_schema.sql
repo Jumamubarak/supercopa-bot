@@ -14,3 +14,12 @@ create table if not exists snapshots (
     sale_status text not null default 'UNKNOWN',
     updated_at timestamptz not null default now()
 );
+
+create table if not exists yeezy_products (
+    product_id text primary key,
+    title text not null default '',
+    price text,
+    url text not null default '',
+    image_url text,
+    first_seen_at timestamptz not null default now()
+);

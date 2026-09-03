@@ -1,0 +1,4 @@
+# Extra dependencies for the LOCAL DEV ONLY standalone bot.py.
+# Not installed by Vercel or the GitHub Actions workflows — install with:
+#   pip install -r requirements.txt -r requirements-bot.txt
+aiogram==3.13.1

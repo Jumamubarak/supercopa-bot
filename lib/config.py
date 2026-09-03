@@ -62,6 +62,10 @@ class Settings:
     open_alert_burst_duration_seconds: int = 3600
     open_alert_message_delay_seconds: float = 1.5
 
+    yeezy_target_url: str = "https://yeezy.com"
+    supercopa_check_interval_seconds: int = 300
+    yeezy_check_interval_seconds: int = 600
+
     keywords: tuple[str, ...] = (
         "Supercopa",
         "Final",
@@ -89,4 +93,7 @@ def load_settings() -> Settings:
         open_alert_burst_interval_seconds=_get_int("OPEN_ALERT_BURST_INTERVAL_SECONDS", 180),
         open_alert_burst_duration_seconds=_get_int("OPEN_ALERT_BURST_DURATION_SECONDS", 3600),
         open_alert_message_delay_seconds=_get_float("OPEN_ALERT_MESSAGE_DELAY_SECONDS", 1.5),
+        yeezy_target_url=_get_str("YEEZY_TARGET_URL", "https://yeezy.com"),
+        supercopa_check_interval_seconds=_get_int("SUPERCOPA_CHECK_INTERVAL", 300),
+        yeezy_check_interval_seconds=_get_int("YEEZY_CHECK_INTERVAL", 600),
     )
