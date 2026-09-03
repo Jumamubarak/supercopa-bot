@@ -1,0 +1,36 @@
+name: Scrape tickets.rfef.es (Supercopa)
+
+on:
+  schedule:
+    # Every 5 minutes, matching SUPERCOPA_CHECK_INTERVAL=300 in .env.example.
+    # GitHub Actions cron syntax can't read secrets/vars, so if you change
+    # SUPERCOPA_CHECK_INTERVAL, update this cron expression to match.
+    - cron: "*/5 * * * *"
+  workflow_dispatch: {}
+
+concurrency:
+  group: scraper-supercopa
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    # Long enough to cover a full open-alert burst (1h) plus fetch/setup time.
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Supercopa scraper
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_WEBHOOK_SECRET: ${{ secrets.TELEGRAM_WEBHOOK_SECRET }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: python scraper_job.py supercopa
